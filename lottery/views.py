@@ -1,47 +1,65 @@
-from django.shortcuts import render
+import os
+
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
-from lottery.models import Student, Event, Wager
 
+with open('lottery/data/events.txt', 'r') as f:
+    EVENTS = [line.strip() for line in f.readlines() if line.strip()]
+
+
+@login_required(login_url='/seniorweek25/accounts/login/')
 def index(request):
-	events = Event.objects.all()
-	context = {'events_list': events}
+	# TODO: get previous state based on user for placeholder values
+
+	error_message = request.session.pop('error_message', None)
+	submit_message = request.session.pop('submit_message', None)
+	context = {
+		'events_list': EVENTS,
+		'error_message': error_message, 
+		'submit_message': submit_message
+	}
+
 	return render(request, 'lottery.html', context)	
 
+
+@login_required(login_url='/seniorweek25/accounts/login/')
 def submit(request):
 	if request.method == 'POST':
-		results = {} # maps Event instances -> wager amounts for that event
-		events = Event.objects.all()
-		for event in events:
-			field_name = 'event_%d' % event.id
-			value = request.POST.get(field_name)
-			if value:
-				try:
-					number = int(value)
-					results[event] = number
-				except ValueError:
-					pass
-
-		total_wagers = sum(results.values())
-		if total_wagers > 1000:
-			return HttpResponse("You can't wager more than 1000.")
-		
-		student, _ = Student.objects.get_or_create(kerb="nmustafa")
-		student.points = 1000 - total_wagers
-		student.save()
-
-		output = "{<br>"
-		for event, points in results.items():
-			output += "%s: %d<br>" % (event.name, points)
-
-			if points == 0:
+		kerb = request.user.username
+		wagers = []
+		total_points = 0
+		for event in EVENTS:
+			value = request.POST.get(event)
+			if not value:
 				continue
 
-			# Always just insert and we'll ignore duplicates later
-			wager = Wager(student_kerb=student, event_id=event, points=points, timestamp=timezone.now())
-			wager.save()
+			points = 0
+			try:
+				points = int(value)					
+			except ValueError:
+				request.session['error_message'] = "Invalid value for %s." % event
+				return redirect('index')
 			
-		return HttpResponse(output+"}")
+			total_points += points
+
+			if total_points > 1000:
+				request.session['error_message'] = "You can't wager more than 1000."
+				return redirect('index')
+
+			wagers.append((event, points))
+		
+		output = ""
+		timestamp = timezone.now().isoformat()
+		with open('lottery/data/wagers.txt', 'a') as f:
+			for wager in wagers:
+				line = "%s\t%s\t%s\t%s\n" % (timestamp, kerb, wager[0], wager[1])
+				f.write(line)
+				output += line
+			
+		request.session['submit_message'] = "Successfully submitted."
+		return redirect('index')
 	else:
 		return HttpResponse("Invalid request.")

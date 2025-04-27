@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '<KEY>'
+SECRET_KEY = 'ke0ew%859qv++^6(s^v#60hp_c$h+y_)*y_f=2u(0%mh48am!a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'lottery', 
+    'mit'
 )
 
 # Django requires a list of hosts this site is served from; since users can
@@ -68,12 +69,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mit.ScriptsRemoteUserMiddleware'
 )
 
 ROOT_URLCONF = 'seniorweek25.urls'
 
 WSGI_APPLICATION = 'seniorweek25.wsgi.application'
 
+# Authentication
+
+AUTHENTICATION_BACKENDS = ('mit.ScriptsRemoteUserBackend', )
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -88,6 +93,7 @@ DATABASES = {
         'NAME': 'nmustafa+seniorweek25',
     }
 }
+# SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

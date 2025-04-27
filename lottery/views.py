@@ -14,6 +14,9 @@ with open('lottery/data/events.txt', 'r') as f:
 def index(request):
 	# TODO: get previous state based on user for placeholder values
 
+	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+		return HttpResponse("Not yet ;)")
+
 	error_message = request.session.pop('error_message', None)
 	submit_message = request.session.pop('submit_message', None)
 	context = {

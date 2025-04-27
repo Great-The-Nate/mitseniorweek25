@@ -1,0 +1,96 @@
+<!-- {% load staticfiles %} -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Senior Week Lottery</title>
+    <!-- <link rel="stylesheet" type="text/css" href="seniorweek25/static/lottery/styles.css"> -->
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}"> -->
+     <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(90deg, red, orange, yellow, rgb(43, 195, 200), violet);
+            background-size: 400% 400%;
+            animation: rainbow 90s ease infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .form-container {
+            background-color: white;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form div {
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #303030;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1a1a1a;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+        }
+     </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Senior Week Lottery</h2>
+        <div>We're looking forward to celebrating Senior Week together! As part of the lottery process, please enter the number of tickets you would like to wager for each event.</div>
+        {% if error_message %}<p style="color:red"><strong>{{ error_message }}</strong></p>{% endif %}
+        {% if submit_message %}<p style="color:green"><strong>{{ submit_message }}</strong></p>{% endif %}
+        <form action="/seniorweek25/lottery/submit/" method="post">
+            {% csrf_token %}
+            {% for event in events_list %}
+                <div>
+                    <label for="{{ event }}">{{ event }}</label>
+                    <input type="number" name="{{ event }}" id="{{ event }}" min="0" max="1000" placeholder=""/>
+                </div>
+            {% endfor %}
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+</body>
+</html>

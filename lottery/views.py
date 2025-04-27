@@ -22,7 +22,7 @@ def index(request):
 		'submit_message': submit_message
 	}
 
-	return render(request, 'lottery.html', context)	
+	return render(request, 'lottery/index.html', context)	
 
 
 @login_required(login_url='/seniorweek25/accounts/login/')
@@ -46,7 +46,7 @@ def submit(request):
 			total_points += points
 
 			if total_points > 1000:
-				request.session['error_message'] = "You can't wager more than 1000."
+				request.session['error_message'] = "Please submit at most 1000 points."
 				return redirect('index')
 
 			wagers.append((event, points))

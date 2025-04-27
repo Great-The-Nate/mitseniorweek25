@@ -5,14 +5,14 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
+from lottery.models import Event, Wager
 
-with open('lottery/data/events.txt', 'r') as f:
-    EVENTS = [line.strip() for line in f.readlines() if line.strip()]
-
+EVENTS =  Event.objects.all()
 
 @login_required(login_url='/seniorweek25/accounts/login/')
 def index(request):
-	# TODO: get previous state based on user for placeholder values
+	# TODO: get previous state based on user for placeholder values? Probably not worth extra load time...
+	# TODO: show list of current class of 2025 members / check user is in class of 2025?
 
 	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
 		return HttpResponse("Not yet ;)")
@@ -30,39 +30,39 @@ def index(request):
 
 @login_required(login_url='/seniorweek25/accounts/login/')
 def submit(request):
-	if request.method == 'POST':
-		kerb = request.user.username
-		wagers = []
-		total_points = 0
-		for event in EVENTS:
-			value = request.POST.get(event)
-			if not value:
-				continue
-
-			points = 0
-			try:
-				points = int(value)					
-			except ValueError:
-				request.session['error_message'] = "Invalid value for %s." % event
-				return redirect('index')
-			
-			total_points += points
-
-			if total_points > 1000:
-				request.session['error_message'] = "Please submit at most 1000 points."
-				return redirect('index')
-
-			wagers.append((event, points))
-		
-		output = ""
-		timestamp = timezone.now().isoformat()
-		with open('lottery/data/wagers.txt', 'a') as f:
-			for wager in wagers:
-				line = "%s\t%s\t%s\t%s\n" % (timestamp, kerb, wager[0], wager[1])
-				f.write(line)
-				output += line
-			
-		request.session['submit_message'] = "Successfully submitted."
-		return redirect('index')
-	else:
+	if request.method != 'POST':
 		return HttpResponse("Invalid request.")
+	
+	kerb = request.user.username
+
+	wagers = []
+	total_points = 0
+	timestamp = timezone.now()
+	for event in EVENTS:
+		value = request.POST.get(event.name)
+		if not value:
+			continue
+
+		points = 0
+		try:
+			points = int(value)
+			if points < 0 or points > 1000:
+				raise ValueError			
+		except ValueError:
+			request.session['error_message'] = "Invalid value for %s." % event
+			return redirect('index')
+		
+		if points == 0:
+			continue
+		
+		total_points += points
+		if total_points > 1000:
+			request.session['error_message'] = "Please submit at most 1000 points."
+			return redirect('index')
+
+		wagers.append(Wager(student_kerb=kerb, event_id=event, points=points, timestamp=timestamp))
+
+	Wager.objects.bulk_create(wagers)
+		
+	request.session['submit_message'] = "Successfully submitted."
+	return redirect('index')

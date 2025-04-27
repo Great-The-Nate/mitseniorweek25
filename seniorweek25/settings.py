@@ -85,15 +85,10 @@ AUTHENTICATION_BACKENDS = ('mit.ScriptsRemoteUserBackend', )
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file' : os.path.expanduser('~/.my.cnf'),
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-        'NAME': 'nmustafa+seniorweek25',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-# SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -112,5 +107,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/seniorweek25/static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_URL = '/__scripts/django/static/'

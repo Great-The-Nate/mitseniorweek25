@@ -9,5 +9,4 @@ urlpatterns = patterns('',
     url(r'^lottery/', include('lottery.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/',  'mit.scripts_login',  name='login', ),
-    
 )

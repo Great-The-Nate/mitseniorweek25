@@ -1,4 +1,5 @@
 import os
+import math
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -45,7 +46,7 @@ def submit(request):
 
 		points = 0
 		try:
-			points = int(value)
+			points = math.floor(float(value))
 			if points < 0 or points > 1000:
 				raise ValueError			
 		except ValueError:

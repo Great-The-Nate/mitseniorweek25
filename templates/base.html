@@ -1,0 +1,82 @@
+{# templates/base.html #}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Senior Week Lottery{% endblock %}</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAFzUkdCAK7OHOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAACxKAAAsSgF3enRNAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAO1JREFUSEu1lQEOhCAMBEHD/3/MndvcmuqVUmqcxEAEdixErZ+DkqTWKm0kYvu1y1ACdH9ESqQrYTUz2bJoZbs0SyJPMhOHRdlKSEiUkdzPbCqKSjAP177v5xotc0WWhIEajLfWpN97l5ZrTulxw3xUS5KBOWZFEQnmcN4InfNXUUQS4Z5zqSgjwRquI1bOWVFGYjHKkYrelgCMyN03JWD6wkaI7IicESdazCqNbrtUpCehzwvwjbeISoD7K/eCViTAPaNts4dXJcAV8QOpyUjAUGQFZiVgKGIYw59IgLt1d1lWAlwRYPgTSSmlfAFONqZCrRh/EwAAAABJRU5ErkJggg==" type="image/png">
+    
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(120deg, rgb(202, 77, 129), red, orange, yellow, rgb(43, 195, 200), violet, violet);
+            background-size: 400% 400%;
+            animation: rainbow 90s ease infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .body-container {
+            background-color: white;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form div {
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #303030;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1a1a1a;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

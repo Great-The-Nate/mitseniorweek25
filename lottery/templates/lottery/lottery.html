@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="body-container">
+    <h2>Senior Week Lottery</h2>
+    <div>
+        We're looking forward to celebrating Senior Week together! 
+        As part of the lottery process, please enter the number of points you would like to wager for each event.
+        Feel free to resubmit as many times as you'd like, we will use your most recent submission.
+    </div>
+    {% if error_message %}<p style="color:red"><strong>{{ error_message }}</strong></p>{% endif %}
+    {% if submit_message %}<p style="color:green"><strong>{{ submit_message }}</strong></p>{% endif %}
+    <form action="{% url 'lottery_submit' %}" method="post">
+        {% csrf_token %}
+        {% for event in events_list %}
+            <div>
+                <label for="{{ event.name }}">{{ event.name }}</label>
+                <input type="number" name="{{ event.name }}" id="{{ event.name }}" min="0" max="1000" placeholder=""/>
+            </div>
+        {% endfor %}
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% endblock %}

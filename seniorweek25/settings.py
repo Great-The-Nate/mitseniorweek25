@@ -112,6 +112,11 @@ USE_TZ = True
 
 STATIC_URL = '/__scripts/django/static/'
 
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+)
+
 # Login URL
 
 LOGIN_URL = 'oidc_auth'

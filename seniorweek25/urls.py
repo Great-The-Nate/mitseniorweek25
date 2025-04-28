@@ -5,8 +5,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', lambda request: HttpResponseRedirect('/seniorweek25/lottery/')),
+    url(r'^$', lambda request: HttpResponseRedirect('/seniorweek25/lottery/'), name='home'),
     url(r'^lottery/', include('lottery.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/login/',  'mit.scripts_login',  name='login', ),
+    url(r'^cert/login/', 'cert_auth.scripts_login', name='cert_login'),
+    url(r'^oidc/', include('oidc_auth.urls'))
 )

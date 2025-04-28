@@ -10,7 +10,7 @@ from lottery.models import Event, Wager
 
 EVENTS =  Event.objects.all()
 
-@login_required(login_url='/seniorweek25/accounts/login/')
+@login_required
 def index(request):
 	# TODO: get previous state based on user for placeholder values? Probably not worth extra load time...
 	# TODO: show list of current class of 2025 members / check user is in class of 2025?
@@ -29,7 +29,7 @@ def index(request):
 	return render(request, 'lottery/index.html', context)	
 
 
-@login_required(login_url='/seniorweek25/accounts/login/')
+@login_required
 def submit(request):
 	if request.method != 'POST':
 		return HttpResponse("Invalid request.")
@@ -66,4 +66,4 @@ def submit(request):
 	Wager.objects.bulk_create(wagers)
 		
 	request.session['submit_message'] = "Successfully submitted."
-	return redirect('index')
+	return redirect('lottery_home')

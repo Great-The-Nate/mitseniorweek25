@@ -20,7 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '<KEY>'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import os
 
 DEBUG = True
 
@@ -40,7 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'lottery', 
-    'mit'
+    'cert_auth',
+    'oidc_auth'
 )
 
 # Django requires a list of hosts this site is served from; since users can
@@ -69,7 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'mit.ScriptsRemoteUserMiddleware'
+    'cert_auth.ScriptsRemoteUserMiddleware'
 )
 
 ROOT_URLCONF = 'seniorweek25.urls'
@@ -78,7 +78,10 @@ WSGI_APPLICATION = 'seniorweek25.wsgi.application'
 
 # Authentication
 
-AUTHENTICATION_BACKENDS = ('mit.ScriptsRemoteUserBackend', )
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'cert_auth.ScriptsRemoteUserBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -108,3 +111,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/__scripts/django/static/'
+
+# Login URL
+
+LOGIN_URL = 'oidc_auth'
+
+# OIDC / Petrock configuration
+OIDC_PROVIDER = 'https://petrock.mit.edu'
+OIDC_AUTHORIZATION_ENDPOINT = OIDC_PROVIDER + '/touchstone/oidc/authorization'
+OIDC_TOKEN_ENDPOINT         = OIDC_PROVIDER + '/oidc/token'
+OIDC_USERINFO_ENDPOINT      = OIDC_PROVIDER + '/oidc/userinfo'
+OIDC_JWKS_URI               = OIDC_PROVIDER + '/oidc/jwks'
+
+OIDC_CLIENT_ID     = 'XXX'
+OIDC_CLIENT_SECRET = 'XXX'
+OIDC_REDIRECT_URI  = 'https://nmustafa.scripts.mit.edu/seniorweek25/oidc/login'
+OIDC_SCOPE         = 'openid email profile'

@@ -12,5 +12,5 @@ INSERT INTO events
         ('Skyzone'),
         ('Chocolate Lab Tour'),
         ('Cheeky Monkey'),
-        ('F1 Arcade'),
+        ('F1 Arcade')
 ;

@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-from lottery.models import Event, Wager
+from lottery.models import Student, Event, Wager
 
 EVENTS =  Event.objects.all()
 
@@ -61,7 +61,8 @@ def submit(request):
 			request.session['error_message'] = "Please submit at most 1000 points."
 			return redirect('lottery_home')
 
-		wagers.append(Wager(student_kerb=kerb, event_id=event, points=points, timestamp=timestamp))
+		student, _ = Student.objects.get_or_create(kerb=kerb)
+		wagers.append(Wager(student_kerb=student, event_id=event, points=points, timestamp=timestamp))
 
 	Wager.objects.bulk_create(wagers)
 		

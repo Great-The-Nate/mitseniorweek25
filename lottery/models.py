@@ -1,5 +1,16 @@
 from django.db import models 
- 
+
+class Student(models.Model):
+    kerb = models.CharField(max_length=20, primary_key=True)
+    remaining_points = models.IntegerField(default=1000)
+
+    class Meta:
+            db_table = 'students'
+
+    def __unicode__(self):
+            return self.kerb
+
+
 class Event(models.Model):
     name = models.CharField(max_length=200)
 
@@ -11,7 +22,7 @@ class Event(models.Model):
  
  
 class Wager(models.Model):
-    student_kerb = models.CharField(max_length=9)
+    student_kerb = models.ForeignKey(Student, db_column='student_kerb')
     event_id = models.ForeignKey(Event, db_column='event_id')
     points = models.IntegerField(default=0)
     timestamp = models.DateTimeField()

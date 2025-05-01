@@ -9,8 +9,9 @@ import rsa
 
 from django.conf import settings
 from django.shortcuts import redirect
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.contrib.auth import login, get_user_model
+from django.db import transaction
 
 # Helpers for JWT / JWK handling
 def b64url_decode(inp):
@@ -87,6 +88,7 @@ def oidc_auth(request):
     auth_url = settings.OIDC_AUTHORIZATION_ENDPOINT + '?' + urllib.urlencode(params)
     return redirect(auth_url)
 
+
 def oidc_login(request):
     if 'error' in request.GET:
         return HttpResponseBadRequest("OIDC error: %s" % request.GET['error'])
@@ -137,14 +139,20 @@ def oidc_login(request):
     User = get_user_model()
     email = ui.get('email') or claims.get('email')
     kerb = email.split('@')[0]
-    user, _ = User.objects.get_or_create(
-        username=kerb,
-        defaults={
-            'email':      email,
-            'first_name': ui.get('given_name', claims.get('given_name', '')),
-            'last_name':  ui.get('family_name', claims.get('family_name', '')),
-        }
-    )
-    user.backend = 'django.contrib.auth.backends.ModelBackend'
-    login(request, user)
+
+    try:
+        with transaction.atomic():
+            user, _ = User.objects.get_or_create(
+                username=kerb,
+                defaults={
+                    'email':      email,
+                    'first_name': ui.get('given_name', claims.get('given_name', '')),
+                    'last_name':  ui.get('family_name', claims.get('family_name', '')),
+                }
+            )
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+    except Exception as e:
+        # Optionally log or handle DB-related errors more gracefully
+        return HttpResponseServerError("User authentication failed, please try again: %s" % e)
     return redirect('home')

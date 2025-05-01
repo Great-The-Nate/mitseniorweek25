@@ -15,10 +15,37 @@
         {% for event in events_list %}
             <div>
                 <label for="{{ event.name }}">{{ event.name }}</label>
-                <input type="number" name="{{ event.name }}" id="{{ event.name }}" min="0" max="1000" placeholder=""/>
+                <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder=""/>
             </div>
         {% endfor %}
+        <div style="display: flex;">
+            <label for="points-total-value" id="points-total-label">Remaining Points: </label>
+            <span id="points-total-value" style="margin-left: 5px;">1000</span>
+        </div>
         <input type="submit" value="Submit" />
     </form>
 </div>
+
+<script>
+function updateSum() {
+    let sum = 0;
+    document.querySelectorAll('.lottery-input').forEach(input => {
+        sum += Number(input.value) || 0;
+    });
+
+    const totalValueElement = document.getElementById('points-total-value');
+    const totalLabelElement = document.getElementById('points-total-label');
+    totalValueElement.textContent = 1000 - sum;
+    if (sum > 1000) {
+      totalValueElement.style.color = 'red';
+      totalLabelElement.style.color = 'red';
+    } else {
+        totalValueElement.style.color = 'black';
+        totalLabelElement.style.color = 'black';
+    }
+}
+document.querySelectorAll('.lottery-input').forEach(input => {
+    input.addEventListener('input', updateSum);
+});
+</script>
 {% endblock %}

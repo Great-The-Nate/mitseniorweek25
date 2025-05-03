@@ -12,8 +12,6 @@ EVENTS =  Event.objects.all()
 
 @login_required
 def index(request):
-	# TODO: get previous state based on user for placeholder values? Probably not worth extra load time...
-	# TODO: show list of current class of 2025 members / check user is in class of 2025?
 
 	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
 		return render(request, 'lottery/wait.html')

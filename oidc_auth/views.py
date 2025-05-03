@@ -13,6 +13,11 @@ from django.http import HttpResponseBadRequest, HttpResponseServerError
 from django.contrib.auth import login, get_user_model
 from django.db import transaction
 
+# Load test libraries
+import string
+import random
+from django.core.urlresolvers import reverse
+
 # Helpers for JWT / JWK handling
 def b64url_decode(inp):
     # if someone passed a unicode, convert to ascii bytes
@@ -156,3 +161,49 @@ def oidc_login(request):
         # Optionally log or handle DB-related errors more gracefully
         return HttpResponseServerError("User authentication failed, please try again: %s" % e)
     return redirect('home')
+
+
+#######################################
+# Load test endpoints
+#######################################
+def oidc_auth_load_test(request):
+    time.sleep(0.001)
+    res = requests.get('http://google.com')
+    return redirect(reverse('oidc_login'))
+
+
+def oidc_login_load_test(request):
+    time.sleep(0.001)
+
+    requests.post(
+        'http://google.com',
+        data={
+            'foo': 'bar',
+        },
+    )
+
+    time.sleep(0.005)
+
+    res = requests.get('http://google.com')
+
+    User = get_user_model()
+    email = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(8)) + '@example.com'
+    kerb = email.split('@')[0]
+
+    try:
+        with transaction.atomic():
+            user, _ = User.objects.get_or_create(
+                username=kerb,
+                defaults={
+                    'email':      email,
+                    'first_name': 'LOAD',
+                    'last_name':  'TEST',
+                }
+            )
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+    except Exception as e:
+        # Optionally log or handle DB-related errors more gracefully
+        return HttpResponseServerError("User authentication failed, please try again: %s" % e)
+    return redirect('home')
+

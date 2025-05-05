@@ -5,14 +5,21 @@ class Student(models.Model):
     remaining_points = models.IntegerField(default=1000)
 
     class Meta:
-            db_table = 'students'
+        db_table = 'students'
 
     def __unicode__(self):
-            return self.kerb
+        return self.kerb
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=64)
+    date = models.CharField(max_length=128)
+    time = models.CharField(max_length=128, null=True)
+    location = models.CharField(max_length=128, null=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    capacity = models.IntegerField(null=True)
+    biddable = models.BooleanField(default=True)
+    extra_info = models.CharField(max_length=200, null=True)
 
     class Meta:
         db_table = 'events'
@@ -32,3 +39,15 @@ class Wager(models.Model):
 
     def __unicode__(self):
         return u"(%s, %s, %d)" % (self.student_kerb, self.event_id, self.points)
+    
+class Attendance(models.Model):
+    student_kerb = models.ForeignKey(Student, db_column='student_kerb')
+    event_id = models.ForeignKey(Event, db_column='event_id')
+    attendance = models.CharField(max_length=8)
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        db_table = 'lottery_attendance'
+
+    def __unicode__(self):
+        return u"(%s, %s, %s)" % (self.student_kerb, self.event_id, self.attendance)

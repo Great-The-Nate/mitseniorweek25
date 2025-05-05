@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-from lottery.models import Student, Event, Wager
+from lottery.models import Student, Event, Wager, Attendance
 
 EVENTS =  Event.objects.all()
 
@@ -33,13 +33,22 @@ def submit(request):
 		return HttpResponse("Invalid request.")
 	
 	kerb = request.user.username
+	student, _ = Student.objects.get_or_create(kerb=kerb)
 
 	wagers = []
 	total_points = 0
+	attendances = []
 	timestamp = timezone.now()
 	for event in EVENTS:
 		value = request.POST.get(event.name)
 		if not value:
+			continue
+
+		if not event.biddable:
+			if value not in ['yes', 'no', 'maybe']:
+				request.session['error_message'] = "Invalid value for %s." % event
+				return redirect('lottery_home')
+			attendances.append(Attendance(student_kerb=student, event_id=event, attendance=value, timestamp=timestamp))
 			continue
 
 		points = 0
@@ -59,10 +68,10 @@ def submit(request):
 			request.session['error_message'] = "Please submit at most 1000 points."
 			return redirect('lottery_home')
 
-		student, _ = Student.objects.get_or_create(kerb=kerb)
 		wagers.append(Wager(student_kerb=student, event_id=event, points=points, timestamp=timestamp))
 
 	Wager.objects.bulk_create(wagers)
+	Attendance.objects.bulk_create(attendances)
 		
 	request.session['submit_message'] = "Successfully submitted."
 	return redirect('lottery_home')

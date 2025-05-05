@@ -8,8 +8,8 @@ import requests
 import rsa
 
 from django.conf import settings
-from django.shortcuts import redirect
-from django.http import HttpResponseBadRequest, HttpResponseServerError
+from django.shortcuts import redirect, render
+from django.http import HttpResponseBadRequest, HttpResponseServerError, HttpResponse
 from django.contrib.auth import login, get_user_model
 from django.db import transaction
 
@@ -93,74 +93,67 @@ def oidc_auth(request):
     auth_url = settings.OIDC_AUTHORIZATION_ENDPOINT + '?' + urllib.urlencode(params)
     return redirect(auth_url)
 
-
 def oidc_login(request):
-    if 'error' in request.GET:
-        return HttpResponseBadRequest("OIDC error: %s" % request.GET['error'])
-
-    if request.GET.get('state') != request.session.get('oidc_state'):
-        return HttpResponseBadRequest("Invalid state parameter")
-
-    code = request.GET.get('code')
-    if not code:
-        return HttpResponseBadRequest("Missing authorization code")
-
-    # exchange code -> tokens
-    tok = requests.post(
-        settings.OIDC_TOKEN_ENDPOINT,
-        data={
-            'grant_type':   'authorization_code',
-            'code':         code,
-            'redirect_uri': settings.OIDC_REDIRECT_URI,
-        },
-        auth=(settings.OIDC_CLIENT_ID, settings.OIDC_CLIENT_SECRET),
-        verify=False #TODO: verify correctly
-    ).json()
-
-    id_token     = tok.get('id_token')
-    access_token = tok.get('access_token')
-    if not id_token:
-        return HttpResponseBadRequest("No ID token returned")
-
-    # verify & decode the ID token
     try:
-        claims = verify_jwt(
-            id_token,
-            settings.OIDC_JWKS_URI,
-            audience=settings.OIDC_CLIENT_ID,
-            issuer=settings.OIDC_PROVIDER,
-            nonce_expected=request.session.get('oidc_nonce')
-        )
-    except ValueError as e:
-        return HttpResponseBadRequest("JWT validation failed: %s" % e)
+        if 'error' in request.GET:
+            raise Exception(request.GET['error'])
 
-    # Get + store user info
-    ui = requests.get(
-        settings.OIDC_USERINFO_ENDPOINT,
-        headers={'Authorization': 'Bearer %s' % access_token},
-        verify=False
-    ).json()
+        if request.GET.get('state') != request.session.get('oidc_state'):
+            raise Exception("Invalid state parameter")
 
-    User = get_user_model()
-    email = ui.get('email') or claims.get('email')
-    kerb = email.split('@')[0]
+        code = request.GET.get('code')
+        if not code:
+            raise Exception("Missing authorization code")
 
-    try:
+        # exchange code -> tokens
+        tok = requests.post(
+            settings.OIDC_TOKEN_ENDPOINT,
+            data={
+                'grant_type':   'authorization_code',
+                'code':         code,
+                'redirect_uri': settings.OIDC_REDIRECT_URI,
+            },
+            auth=(settings.OIDC_CLIENT_ID, settings.OIDC_CLIENT_SECRET),
+            verify=False #TODO: verify correctly
+        ).json()
+
+        id_token     = tok.get('id_token')
+        access_token = tok.get('access_token')
+        if not id_token:
+            raise Exception("Missing ID token")
+
+        # verify & decode the ID token
+        try:
+            claims = verify_jwt(
+                id_token,
+                settings.OIDC_JWKS_URI,
+                audience=settings.OIDC_CLIENT_ID,
+                issuer=settings.OIDC_PROVIDER,
+                nonce_expected=request.session.get('oidc_nonce')
+            )
+        except ValueError as e:
+            raise Exception(str(e))
+
+        User = get_user_model()
+        email = claims.get('sub')
+        kerb = email.split('@')[0]
         with transaction.atomic():
             user, _ = User.objects.get_or_create(
                 username=kerb,
                 defaults={
-                    'email':      email,
-                    'first_name': ui.get('given_name', claims.get('given_name', '')),
-                    'last_name':  ui.get('family_name', claims.get('family_name', '')),
+                    'email': email,
+                    'first_name': claims.get('given_name', ''),
+                    'last_name': claims.get('family_name', ''),
                 }
             )
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
+    
+        return redirect('home')
+    
     except Exception as e:
-        # Optionally log or handle DB-related errors more gracefully
-        return HttpResponseServerError("User authentication failed, please try again: %s" % e)
-    return redirect('home')
+        context = {"error": str(e)}
+        return render(request, 'auth_error.html', context, status=500)
 
 
 #######################################
@@ -168,7 +161,6 @@ def oidc_login(request):
 #######################################
 def oidc_auth_load_test(request):
     time.sleep(0.001)
-    res = requests.get('http://google.com')
     return redirect(reverse('oidc_login'))
 
 

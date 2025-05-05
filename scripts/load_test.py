@@ -4,18 +4,31 @@ import time
 from bs4 import BeautifulSoup
 import random
 import matplotlib.pyplot as plt
+import psycopg2
 
-# Configuration
 HOME_URL = "https://nmustafa.scripts.mit.edu/seniorweek25"
 SUBMIT_URL = HOME_URL + "/lottery/submit/"
 
-NUM_USERS = 100 # Number of concurrent users
+NUM_USERS = 100
 
-EVENTS = [
-    "Skydiving", "Pool Party", "Level99", "Red Sox Game", "Top Golf", 
-    "Movie & Crafts Night", "Masterclass MIT", "Cafe Runaway", "Skyzone", 
-    "Cheeky Monkey", "F1 Arcade", "Taza Chocolate Lab Tour"
-]
+def get_events():
+    conn = psycopg2.connect(
+        host="XXX",
+        database="XXX",
+        user="XXX",
+        password="XXX"
+    )
+    cur = conn.cursor()
+
+    cur.execute("SELECT name FROM events")
+    events = [row[0] for row in cur.fetchall()]
+
+    cur.close()
+    conn.close()
+    return events
+
+EVENTS = get_events()
+print(EVENTS)
 
 def submit_form(user_id):
     try:
@@ -69,9 +82,13 @@ def submit_form(user_id):
         if "Successfully submitted" in str(post_response.content):
             if total_points > 1000:
                 print(f"[User {user_id}] ERROR: ACCEPTED WHEN SHOULD'VE REJECTED")
+                print(f"[User {user_id}] events: {form_data} total points: {total_points}")
+                print(f"[User {user_id}] response: {str(post_response.content)}")
         else:
             if total_points <= 1000:
                 print(f"[User {user_id}] ERROR: REJECTED WHEN SHOULD'VE ACCEPTED")
+                print(f"[User {user_id}] events: {form_data} total points: {total_points}")
+                print(f"[User {user_id}] response: {str(post_response.content)}")
 
 
         home_request_duration = home_request_end - home_request_start

@@ -13,7 +13,7 @@ EVENTS =  Event.objects.all()
 @login_required
 def index(request):
 
-	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+	if timezone.now().date() < timezone.datetime(2025, 5, 7).date() and request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
 		return render(request, 'lottery/wait.html')
 
 	error_message = request.session.pop('error_message', None)

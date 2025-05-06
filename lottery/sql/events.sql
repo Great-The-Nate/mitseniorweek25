@@ -140,7 +140,7 @@ INSERT INTO events
             165,
             100,
             true,
-            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accomodate vendor timelines.'
+            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accommodate vendor timelines.'
         ),
         (
             'Skydiving Day 2',
@@ -150,7 +150,7 @@ INSERT INTO events
             165,
             100,
             true,
-            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accomodate vendor timelines.'
+            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accommodate vendor timelines.'
         ),
         (
             'Skydiving Day 3',
@@ -160,7 +160,7 @@ INSERT INTO events
             165,
             100,
             true,
-            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accomodate vendor timelines. Also note that Senior Ball is on this day.'
+            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accommodate vendor timelines. Also note that Senior Ball is on this day.'
         ),
         (
             'Skydiving Day 4',
@@ -170,7 +170,7 @@ INSERT INTO events
             165,
             100,
             true,
-            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accomodate vendor timelines.'
+            'Buses leave at 4:00 AM. Expect to be gone all day. Overflow space filled on 7:00 AM buses on a first-come first-serve basis. Please note that we will be distributing all skydiving tickets in the first round to accommodate vendor timelines.'
         ),
         (
             'Boston Scavenger Hunt',

@@ -19,7 +19,7 @@ class Event(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     capacity = models.IntegerField(null=True)
     biddable = models.BooleanField(default=True)
-    extra_info = models.CharField(max_length=200, null=True)
+    extra_info = models.CharField(max_length=1024, null=True)
 
     class Meta:
         db_table = 'events'

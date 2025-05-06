@@ -25,7 +25,10 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["nmustafa.scripts.mit.edu"]
+
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 
 # Application definition
@@ -94,6 +97,7 @@ DATABASES = {
         'PASSWORD': 'XXX',
         'HOST': 'seniorweek25.xvm.mit.edu',
         'PORT': '5432',
+        # 'CONN_MAX_AGE': 30,
     }
 }
 

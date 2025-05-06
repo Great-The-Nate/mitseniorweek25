@@ -14,45 +14,68 @@
             background-size: 400% 400%;
             animation: rainbow 90s ease infinite;
         }
-
         @keyframes rainbow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .body-container {
             background-color: white;
             max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 3em auto;
+            padding: 2em;
+            border-radius: 1em;
+            box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 1em;
         }
-
         .intro {
-            margin-bottom: 20px;
+            margin-bottom: 1.5em;
+        }
+        .bidding-instructions {
+            margin-top: 1.0em;
+            margin-bottom: 1.5em;
         }
 
         .event {
-            margin-top: 15px;
-            margin-bottom: 20px;
-            line-height: 1.1;
+            margin-top: 0.75em;
+            margin-bottom: 0.75em;
+            border-radius: 8px;
+            cursor: pointer;
         }
-
-        .event-info {
-            margin-bottom: 10px;
+        .event.active {
+            border: 1px solid #ccc;
         }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
+        .event-header {
+            padding: 0.75em 1em;
+            background: #ffffff;
+            border-radius: 8px;
             font-weight: bold;
+
+            border: 1px solid #ccc;
+        }
+        .event.active .event-header {
+            border: 0px;
+        }
+        .event:not(.active) .event-header:hover {
+            background: #eeeeee;
+        }
+        .event-content {
+            display: none;
+            padding: 0em 1em 0.75em 1em;
+            border-radius: 8px;
+        }
+        .event.active .event-content {
+            display: block;
+        }
+        .event-content div {
+            margin-top: 0.5em;
+        }
+        .event hr {
+            margin: 0em;
         }
 
         input[type="number"] {
@@ -61,15 +84,28 @@
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 5px;
+            margin-top: 0.75em;
+            cursor:text;
+            font-size: 16px;
+            font-family: "Times New Roman", Times, serif;
         }
 
         .remaining-points {
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        .remaining-points label {
+            font-weight: bold;
+        }
 
-        .event-attendance label {
-            font-weight: normal !important;
+        .non-biddable-info {
+            margin-top: 1.0em;
+            margin-bottom: 1.0em;
+        }
+
+        .event-attendance div {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
         }
 
         input[type="submit"] {
@@ -81,8 +117,8 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 1.5em;
         }
-
         input[type="submit"]:hover {
             background-color: #1a1a1a;
         }

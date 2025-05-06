@@ -9,16 +9,27 @@
         <b>Feel free to resubmit as many times as you'd like, we will use your most recent submission.</b>
         <br/>
         <br/>
-        For complete information on the events and the bidding process, please visit <a href="https://engage.mit.edu/2025swc/home/">https://engage.mit.edu/2025swc/home/</a>.
+        For complete information on the events, please visit: <a href="https://engage.mit.edu/mitseniorweek2025/events/">https://engage.mit.edu/mitseniorweek2025/events/</a>.
     </div>
     {% if error_message %}<p style="color:red"><strong>{{ error_message }}</strong></p>{% endif %}
     {% if submit_message %}<p style="color:green"><strong>{{ submit_message }}</strong></p>{% endif %}
     
     <hr/>
-    <br/>
 
-    <div>
-        As part of the bidding process, please list the number of points you'd like to bid on each event. You may bid up to 1000 points total. 
+    <div class="bidding-instructions">
+        <div>
+            This year, we've implemented a bidding system to ensure everyone gets a fair shot at all events.
+            Instructions for the bidding process can be found here: <a href="https://shorturl.at/rMczu">https://shorturl.at/rMczu</a>.
+        </div>
+        <!-- <div>
+            You can bid up to 1000 points across all events. 
+            At the end of the first round, 75% of the tickets for each event will be given to those with the highest bids.
+            Points are refunded at the end of Round 1 for bids that were unsuccessful as well as bids that spent more points than neccessary to get a ticket. 
+        </div> -->
+        <br/>
+        <div>
+            As part of the bidding process, please list the number of points you'd like to bid on each event. You may bid up to 1000 points total. 
+        </div>
     </div>
 
     <form action="{% url 'lottery_submit' %}" method="post">
@@ -26,15 +37,21 @@
         {% for event in events_list %}
             {% if event.biddable %}
                 <div class="event">
-                    <label for="{{ event.name }}">{{ event.name }}</label>
-                    <div class="event-info"> 
-                            <i>{{ event.date }} {% if event.time %} {{ event.time }} {% endif %}</i>
-                            {% if event.location %} <div>{{ event.location }} </div> {% endif %}
-                            {% if event.price %} <div>Price: ${{  event.price }} </div> {% endif %}
-                            {% if event.capacity %} <div>Capacity: {{  event.capacity }} </div> {% endif %}
-                            {% if event.extra_info %} <div>{{  event.extra_info }} </div> {% endif %}
+                    <div class="event-header">
+                      <span class="event-title">{{ event.name }}</span>
+                      <!-- Optionally add an icon here -->
+                      <span style="float: right;" class="accordion-icon">+</span>
                     </div>
-                    <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder=""/>
+                    <div class="event-content">
+                        <hr/>
+                        <div>Date: {{ event.date }} </div>
+                        {% if event.time %} <div>Time: {{ event.time }}</div> {% endif %}
+                        {% if event.location %}<div>Location: {{ event.location }}</div>{% endif %}
+                        {% if event.price %}<div>Price: ${{ event.price }}</div>{% endif %}
+                        {% if event.capacity %}<div>Capacity: {{ event.capacity }}</div>{% endif %}
+                        {% if event.extra_info %}<div>{{ event.extra_info }}</div>{% endif %}
+                        <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder=""/>
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}
@@ -45,25 +62,35 @@
         </div>
 
         <hr/>
-        <br/>
+
+        <div class="non-biddable-info">
+            The following events are all FREE - JUST SHOW UP! For planning purposes, though, feel free to let us know if you're planning on attending.
+        </div>
 
         <div>
-            The following events are all FREE - JUST SHOW UP! For planning purposes, though, feel free to let us know if you're planning on attending.
             {% for event in events_list %}
                 {% if not event.biddable %}
                     <div class="event">
-                        <label for="{{ event.name }}">{{ event.name }}</label>
-                        <div class="event-info"> 
-                                <i>{{ event.date }} {% if event.time %} {{ event.time }} {% endif %}</i>
-                                {% if event.location %} <div>{{ event.location }} </div> {% endif %}
-                                {% if event.price %} <div>Price: ${{  event.price }} </div> {% endif %}
-                                {% if event.capacity %} <div>Capacity: {{  event.capacity }} </div> {% endif %}
-                                {% if event.extra_info %} <div>{{  event.extra_info }} </div> {% endif %}
+                        <div class="event-header">
+                          <span class="event-title">{{ event.name }}</span>
+                          <!-- Optionally add an icon here -->
+                          <span style="float: right;" class="accordion-icon">+</span>
                         </div>
-                        <div class="event-attendance">
-                            <label for="{{ event.name }}-yes"><input type="radio" id="{{ event.name }}-yes" name="{{ event.name }}" value="yes">Yes</label>
-                            <label for="{{ event.name }}-no"><input type="radio" id="{{ event.name }}-no" name="{{ event.name }}" value="no">No</label>
-                            <label for="{{ event.name }}-maybe"><input type="radio" id="{{ event.name }}-maybe" name="{{ event.name }}" value="maybe">Maybe</label>
+                        <div class="event-content">
+                            <hr/>
+                            <div>Date: {{ event.date }} </div>
+                            {% if event.time %} <div>Time: {{ event.time }}</div> {% endif %}
+                            {% if event.location %}<div>Location: {{ event.location }}</div>{% endif %}
+                            {% if event.price %}<div>Price: ${{ event.price }}</div>{% endif %}
+                            {% if event.capacity %}<div>Capacity: {{ event.capacity }}</div>{% endif %}
+                            {% if event.extra_info %}<div>{{ event.extra_info }}</div>{% endif %}
+                            <div class="event-attendance">
+                                <hr/>
+                                <div>RSVP?</div>
+                                <label for="{{ event.name }}-yes"><input type="radio" id="{{ event.name }}-yes" name="{{ event.name }}" value="yes">Yes</label>
+                                <label for="{{ event.name }}-no"><input type="radio" id="{{ event.name }}-no" name="{{ event.name }}" value="no">No</label>
+                                <label for="{{ event.name }}-maybe"><input type="radio" id="{{ event.name }}-maybe" name="{{ event.name }}" value="maybe">Maybe</label>
+                            </div>
                         </div>
                     </div>
                 {% endif %}
@@ -94,6 +121,16 @@ function updateSum() {
 }
 document.querySelectorAll('.lottery-input').forEach(input => {
     input.addEventListener('input', updateSum);
+});
+
+document.querySelectorAll('.event').forEach(event => {
+  event.addEventListener('click', function(event) {
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'LABEL') {
+      return;
+    }
+    event.currentTarget.classList.toggle('active');
+    event.currentTarget.querySelector('.accordion-icon').textContent = event.currentTarget.classList.contains('active') ? '–' : '+';
+  });
 });
 </script>
 {% endblock %}

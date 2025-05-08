@@ -24,9 +24,9 @@
         <div>
             You can bid up to 1000 points across all events. 
             At the end of the first round, 75% of the tickets for each event will be given to those with the highest bids.
-            You will have until 5/12 to purchase a ticket, otherwise it will be returned to the pool for round 2. 
+            You will have until 5/12 to purchase a ticket, otherwise it will be returned to the pool for Round 2. 
             Points are refunded at the end of Round 1 for bids that were unsuccessful as well as bids that spent more points than neccessary to get a ticket (e.g. if you bid 1000 points but only needed to bid 400 to get a ticket, you will get 600 points back). 
-            On 5/12, a second round will open in which the remaining tickets will be given to those with the highest bids.
+            On 5/12, a second round of bidding will open in which the remaining tickets will be given to those with the highest bids.
         </div>
         <br/>
         <div>
@@ -35,7 +35,7 @@
         <br/>
         <div>
             Full instructions for the bidding process can be found here: <a href="https://shorturl.at/rMczu">https://shorturl.at/rMczu</a>.
-            As part of the bidding process, please list the number of points you'd like to bid on each event. You may bid up to 1000 points total. 
+            Please enter the number of points you'd like to bid on each event below.
         </div>
     </div>
 
@@ -46,7 +46,6 @@
                 <div class="event">
                     <div class="event-header">
                       <span class="event-title">{{ event.name }}</span>
-                      <!-- Optionally add an icon here -->
                       <span style="float: right;" class="accordion-icon">+</span>
                     </div>
                     <div class="event-content">
@@ -56,7 +55,7 @@
                         {% if event.location %}<div>Location: {{ event.location }}</div>{% endif %}
                         {% if event.price %}<div>Price: ${{ event.price }}</div>{% endif %}
                         {% if event.capacity %}<div>Capacity: {{ event.capacity }}</div>{% endif %}
-                        {% if event.extra_info %}<div>{{ event.extra_info }}</div>{% endif %}
+                        {% if event.extra_info %}<div>{{ event.extra_info|urlize }}</div>{% endif %}
                         <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder=""/>
                     </div>
                 </div>

@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest, HttpResponseServerError, HttpResponse
 from django.contrib.auth import login, get_user_model
 from django.db import transaction
+from functools import wraps
 
 # Load test libraries
 import string
@@ -75,6 +76,17 @@ def verify_jwt(token, jwks_uri, audience, issuer, nonce_expected):
 
     return payload
 
+def no_cache(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        resp = view_func(request, *args, **kwargs)
+        resp['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        resp['Pragma']        = 'no-cache'
+        resp['Expires']       = '0'
+        return resp
+    return _wrapped
+
+@no_cache
 def oidc_auth(request):
     # generate & stash state+nonce
     state = uuid.uuid4().hex
@@ -93,6 +105,7 @@ def oidc_auth(request):
     auth_url = settings.OIDC_AUTHORIZATION_ENDPOINT + '?' + urllib.urlencode(params)
     return redirect(auth_url)
 
+@no_cache
 def oidc_login(request):
     try:
         if 'error' in request.GET:

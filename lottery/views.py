@@ -13,8 +13,8 @@ EVENTS =  Event.objects.all()
 @login_required
 def index(request):
 
-	if timezone.now().date() < timezone.datetime(2025, 5, 7).date() and request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
-		return render(request, 'lottery/wait.html')
+	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+		return render(request, 'lottery/pre_round_2.html')
 
 	error_message = request.session.pop('error_message', None)
 	submit_message = request.session.pop('submit_message', None)
@@ -29,6 +29,9 @@ def index(request):
 
 @login_required
 def submit(request):
+	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+		return redirect('lottery_home')
+
 	if request.method != 'POST':
 		return HttpResponse("Invalid request.")
 	

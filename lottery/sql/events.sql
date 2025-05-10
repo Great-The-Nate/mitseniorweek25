@@ -97,7 +97,7 @@ INSERT INTO events
             '11:00 AM - 5:30 PM',
             NULL,
             5,
-            100,
+            104,
             true,
             'Join us at the factory for an Intro to Stone Ground Chocolate! We''ll have several 1 hr. tours of the Taza Chocolate Factory throughout the day. Signups for times will come out after ticketing.'
         ),

@@ -65,6 +65,7 @@ class AllowedHostsMiddleware:
         self.process_request(request)
         return self.get_response(request)
 MIDDLEWARE_CLASSES = (
+    'seniorweek25.middleware.ForceHTTPSMiddleware',
     'seniorweek25.settings.AllowedHostsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

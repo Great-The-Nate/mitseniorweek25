@@ -1,5 +1,4 @@
 */*.pyc
 db.sqlite3
 seniorweek25/secrets.sh
-scripts/wagers_backup.txt
-scripts/attendance_backup.txt
+scripts/*.txt

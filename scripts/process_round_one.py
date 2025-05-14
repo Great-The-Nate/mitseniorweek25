@@ -24,23 +24,6 @@ WHERE event_id = %d
 ORDER BY points DESC;
 """
 
-# Event metrics query
-'''
-WITH latest_submissions AS (
-    SELECT student_kerb, MAX(timestamp) 
-    AS max_ts 
-    FROM lottery_wagers 
-    WHERE points > 0
-    GROUP BY student_kerb
-) 
-select lottery.event_id, name, count(*) from lottery_wagers as lottery
-join latest_submissions as latest on lottery.student_kerb = latest.student_kerb and lottery.timestamp = latest.max_ts
-join events as e on lottery.event_id = e.id 
-where biddable
-group by event_id, name 
-order by event_id;
-'''
-
 CREATE_STUDENT_IF_NOT_EXISTS_QUERY = """
 INSERT INTO students (kerb, remaining_points) 
 SELECT %s, 1000 WHERE NOT EXISTS (SELECT 1 FROM students WHERE kerb = %s);
@@ -110,7 +93,7 @@ nepos = {
         "kyna", "cnf", "anaemeje",
         "stella24", "cswan25",
         "fdma2405", "nmustafa", "ncam", "huanyic1",
-        "katieac", "logtham",
+        "katieac", "logtaham",
         "claire25",
         "yycliang", "emmajung",
         "jkim25",
@@ -237,7 +220,3 @@ for event_id in capacities:
     store_accepted_wagers(event_id, accepted)
 
 conn.close()
-
-# TODO find how many events everyone got
-# TODO update new capacities (after ticketing) + student points (just if accepted or also if bought?)
-# TODO in round 2 make sure people don't get the same event twice

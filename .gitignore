@@ -1,5 +1,6 @@
 */*.pyc
 db.sqlite3
 seniorweek25/secrets.sh
-scripts/*.txt
+scripts/backups/*
+scripts/degree_lists/*
 scripts/round_one/*

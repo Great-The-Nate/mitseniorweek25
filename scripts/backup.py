@@ -13,13 +13,13 @@ cur = conn.cursor()
 
 cur.execute("SELECT * FROM lottery_wagers;")
 res = cur.fetchall()
-with open('wagers_backup.txt', 'w') as f:
+with open('backups/wagers_backup.txt', 'w') as f:
     for row in res:
         f.write(str(row) + '\n')
 
 cur.execute("SELECT * FROM lottery_attendance;")
 res = cur.fetchall()
-with open('attendance_backup.txt', 'w') as f:
+with open('backups/attendance_backup.txt', 'w') as f:
     for row in res:
         f.write(str(row) + '\n')
 

@@ -20,6 +20,8 @@ class Event(models.Model):
     capacity = models.IntegerField(null=True)
     biddable = models.BooleanField(default=True)
     extra_info = models.CharField(max_length=1024, null=True)
+    round_one_cutoff = models.IntegerField()
+    round_two_capacity = models.IntegerField()
 
     class Meta:
         db_table = 'events'

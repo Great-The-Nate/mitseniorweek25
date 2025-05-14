@@ -3,9 +3,10 @@
 {% block content %}
 <div class="body-container">
     <h2>Senior Week Event Bidding</h2>
-    <div class="intro">
-        We're looking forward to celebrating Senior Week together! 
-        Round 1 bidding is open until <i>May 9th 11:59pm</i>.
+    <div style="text-align: center;" class="intro">
+        Alright, here we go again! 
+        Round 2 bidding is open until <i>May 16th 11:59pm</i>.
+        <br/>
         <b>Feel free to resubmit as many times as you'd like, we will use your most recent submission.</b>
         <br/>
         <br/>
@@ -22,21 +23,24 @@
         </div>
         <br/>
         <div>
-            You can bid up to 1000 points across all events. 
-            At the end of the first round, 75% of the tickets for each event will be given to those with the highest bids.
-            You will have until 5/12 to purchase a ticket, otherwise it will be returned to the pool for Round 2. 
-            Points are refunded at the end of Round 1 for bids that were unsuccessful as well as bids that spent more points than neccessary to get a ticket (e.g. if you bid 1000 points but only needed to bid 400 to get a ticket, you will get 600 points back). 
-            On 5/12, a second round of bidding will open in which the remaining tickets will be given to those with the highest bids.
+            For Round 2, the remaining 25% of tickets for each event as well as any unpurchased tickets will be given out in the same manner as Round 1.
+            Any points spent on unsuccessful bids or beyond the points cutoff during Round 1 have been refunded – you can see your remaining points below. 
+            You will have at least 48 hours after Round 2 ticketing opens to purchase your tickets. 
         </div>
         <br/>
         <div>
-            Please note that for skydiving only, all tickets will be sold during the first round in order to accommodate our vendor's timeline.
+            Note that listed event capacities do not account for unpurchased tickets and, therefore, may be higher than the listed capacity.
         </div>
         <br/>
         <div>
-            Full instructions for the bidding process can be found here: <a href="https://shorturl.at/rMczu">https://shorturl.at/rMczu</a>.
+            Check out our full bidding instructions here: <a href="https://shorturl.at/rMczu">https://shorturl.at/rMczu</a>.
             Please enter the number of points you'd like to bid on each event below.
         </div>
+    </div>
+
+    <div class="remaining-points" style="display: flex;">
+        <label for="points-total-value" id="points-total-label">Remaining Points: </label>
+        <span id="points-total-value" style="margin-left: 5px;">{{ remaining_points }}</span>
     </div>
 
     <form action="{% url 'lottery_submit' %}" method="post">
@@ -53,24 +57,26 @@
                         <div>Date: {{ event.date }} </div>
                         {% if event.time %} <div>Time: {{ event.time }}</div> {% endif %}
                         {% if event.location %}<div>Location: {{ event.location }}</div>{% endif %}
-                        {% if event.price %}<div>Price: ${{ event.price }}</div>{% endif %}
+                        <div>Price: ${{ event.price }}</div>
                         {% if event.capacity %}<div>Capacity: {{ event.capacity }}</div>{% endif %}
                         {% if event.extra_info %}<div>{{ event.extra_info|urlize }}</div>{% endif %}
+
+                        {% if event.accepted %}
+                        <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder="You already got this event in Round 1!" disabled/>
+                        {% elif event.wagered_points != -1 %}
+                        <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder="{{ event.wagered_points }}"/>
+                        {% else %}
                         <input type="number" name="{{ event.name }}" id="{{ event.name }}" class="lottery-input" min="0" max="1000" placeholder=""/>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
 
-        <div class="remaining-points" style="display: flex;">
-            <label for="points-total-value" id="points-total-label">Remaining Points: </label>
-            <span id="points-total-value" style="margin-left: 5px;">1000</span>
-        </div>
-
         <hr/>
 
         <div class="non-biddable-info">
-            The following events are all FREE - JUST SHOW UP! For planning purposes, though, feel free to let us know if you're planning on attending.
+            The following events are STILL FREE - JUST SHOW UP! Feel free to let us know if you're planning on attending!
         </div>
 
         <div>
@@ -109,6 +115,7 @@
 
 <script>
 function updateSum() {
+    const remainingPoints = JSON.parse('{{ remaining_points }}');
     let sum = 0;
     document.querySelectorAll('.lottery-input').forEach(input => {
         sum += Number(input.value) || 0;
@@ -116,8 +123,8 @@ function updateSum() {
 
     const totalValueElement = document.getElementById('points-total-value');
     const totalLabelElement = document.getElementById('points-total-label');
-    totalValueElement.textContent = 1000 - sum;
-    if (sum > 1000) {
+    totalValueElement.textContent = remainingPoints - sum;
+    if (sum > remainingPoints) {
       totalValueElement.style.color = 'red';
       totalLabelElement.style.color = 'red';
     } else {

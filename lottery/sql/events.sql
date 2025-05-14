@@ -86,10 +86,10 @@ INSERT INTO events
             '5/27/2025',
             '10:00 AM - 1:00 PM',
             'Across Boston!',
-            5,
+            0,
             150,
             true,
-            'Run (or walk or bike or Uber) to your favorite cafes in the Boston area including Levain Bakery, Mamaleh''s, Formaggio, and more. Comes with three free treat coupons.'  
+            'Run (or walk or Uber or cartwheel) to your favorite cafes in the Boston area including Levain Bakery, Mamaleh''s, Formaggio, and more. Comes with free treat coupons for three different cafes.'
         ),
         (
             'Taza Chocolate Lab Tours',

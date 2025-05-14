@@ -2,3 +2,4 @@
 db.sqlite3
 seniorweek25/secrets.sh
 scripts/*.txt
+scripts/round_one/*

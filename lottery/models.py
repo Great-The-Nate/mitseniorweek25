@@ -33,6 +33,8 @@ class Wager(models.Model):
     event_id = models.ForeignKey(Event, db_column='event_id')
     points = models.IntegerField(default=0)
     timestamp = models.DateTimeField()
+    round = models.IntegerField(default=1)
+    accepted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'lottery_wagers'

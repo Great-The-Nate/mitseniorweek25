@@ -18,14 +18,17 @@ def get_round_one_info(kerb):
 	for row in round_one_wagers:
 		accepted_event_ids.add(row.event_id.id)
 
-	remaining_points = Student.objects.get(kerb=kerb).remaining_points
-	return accepted_event_ids, remaining_points
+	try:
+		remaining_points = Student.objects.get(kerb=kerb).remaining_points
+		return accepted_event_ids, remaining_points
+	except:
+		return accepted_event_ids, 1000
 
 @login_required
 def index(request):
 
-	if request.user.username not in ['', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
-		return render(request, 'lottery/pre_round_2.html')
+	# if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+	return render(request, 'lottery/post_round_2.html')
 
 	error_message = request.session.pop('error_message', None)
 	submit_message = request.session.pop('submit_message', None)
@@ -72,8 +75,8 @@ def index(request):
 
 @login_required
 def submit(request):
-	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
-		return redirect('lottery_home')
+#	if request.user.username not in ['nmustafa', 'kyna', 'fdma2405', 'claire25', 'stella24', 'yycliang', 'sallyz21', 'katieac', 'jkim25']:
+	return redirect('lottery_home')
 
 	if request.method != 'POST':
 		return HttpResponse("Invalid request.")

@@ -16,18 +16,18 @@ SET
     ELSE round_one_cutoff
   END,
   round_two_capacity = CASE name
-    WHEN 'Cafe Runaway'             THEN capacity - 124
-    WHEN 'Cheeky Monkey'            THEN capacity - 230
-    WHEN 'F1 Arcade'                THEN capacity - 162
-    WHEN 'Level99'                  THEN capacity - 171
-    WHEN 'Red Sox Game'             THEN capacity - 187
-    WHEN 'Skydiving Day 1'          THEN capacity - 100
-    WHEN 'Skydiving Day 2'          THEN capacity - 100
-    WHEN 'Skydiving Day 3'          THEN capacity - 12
-    WHEN 'Skydiving Day 4'          THEN capacity - 100
-    WHEN 'Skyzone'                  THEN capacity - 187
-    WHEN 'Taza Chocolate Lab Tours' THEN capacity - 82
-    WHEN 'Top Golf'                 THEN capacity - 226
+    WHEN 'Cafe Runaway'             THEN capacity - 104
+    WHEN 'Cheeky Monkey'            THEN capacity - 188
+    WHEN 'F1 Arcade'                THEN capacity - 128
+    WHEN 'Level99'                  THEN capacity - 146
+    WHEN 'Red Sox Game'             THEN capacity - 130
+    WHEN 'Skydiving Day 1'          THEN capacity - 71
+    WHEN 'Skydiving Day 2'          THEN capacity - 84
+    WHEN 'Skydiving Day 3'          THEN capacity - 3
+    WHEN 'Skydiving Day 4'          THEN capacity - 64
+    WHEN 'Skyzone'                  THEN capacity - 155
+    WHEN 'Taza Chocolate Lab Tours' THEN capacity - 63
+    WHEN 'Top Golf'                 THEN capacity - 187
     ELSE round_two_capacity
   END
 WHERE name IN (

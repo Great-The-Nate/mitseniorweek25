@@ -29,7 +29,7 @@
         </div>
         <br/>
         <div>
-            Note that listed event capacities do not account for unpurchased tickets and, therefore, may be higher than the listed capacity.
+            <b>Note that listed event capacities are not perfectly up to date with unpurchased tickets and, therefore, the actual number of remaining tickets may be slightly higher/lower than the listed capacity.</b>
         </div>
         <br/>
         <div>
@@ -47,6 +47,12 @@
         {% csrf_token %}
         {% for event in events_list %}
             {% if event.biddable %}
+                {% if event.id == 14 %}
+                <div >
+                    We still have some available capacity for Skydiving so if you'd like to wager points towards unclaimed tickets and/or being on the waitlist, please enter your bids below. 
+                    We're also working to expand capacity on Days 1,2, & 4 but we unfortunately do not have more information for you all at this time.
+                </div>
+                {% endif %}
                 <div class="event">
                     <div class="event-header">
                       <span class="event-title">{{ event.name }}</span>
@@ -58,7 +64,7 @@
                         {% if event.time %} <div>Time: {{ event.time }}</div> {% endif %}
                         {% if event.location %}<div>Location: {{ event.location }}</div>{% endif %}
                         <div>Price: ${{ event.price }}</div>
-                        {% if event.capacity %}<div>Capacity: {{ event.capacity }}</div>{% endif %}
+                        <div>Approx. Remaining Capacity: {{ event.capacity }}</div>
                         {% if event.extra_info %}<div>{{ event.extra_info|urlize }}</div>{% endif %}
 
                         {% if event.accepted %}
